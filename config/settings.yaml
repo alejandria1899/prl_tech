@@ -1,6 +1,6 @@
 thingspeak:
   channel_id: 3175956
-  read_api_key: "TEFO1R0JKX7O2MMM"
+  read_api_key: ""
   field_temp: 1
   field_hum: 2
   results: 10000
