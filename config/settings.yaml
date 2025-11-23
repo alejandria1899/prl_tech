@@ -1,15 +1,11 @@
 thingspeak:
-  channel_id: 3175956
+  channel_id: ""
   read_api_key: ""
   field_temp: 1
   field_hum: 2
   results: 10000
 
-
 nombre_cliente: "Mi estación DHT22"
 salida_informes: "outputs/informes"
 salida_graficos: "outputs/graficos"
 nota_legal_path: "docs/nota_legal_orientativo.txt"
-umbral_alerta_temp: 30.0
-franja_resumen_horas: 2
-intervalo_min: 0.33

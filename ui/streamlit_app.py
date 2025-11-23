@@ -20,13 +20,19 @@ import matplotlib.dates as mdates
 # PDF
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Image,
+    Table,
+    TableStyle,
+    PageBreak,
 )
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.lib.units import mm
 
-# Nuestra función para leer de ThingSpeak
+# Lectura desde ThingSpeak
 from analyzer.io_thingspeak import cargar_desde_thingspeak
 
 
@@ -52,10 +58,11 @@ if CONFIG_PATH.exists():
 else:
     CFG = {}
 
+
 # ---------------------------
 # Funciones utilitarias
 # ---------------------------
-def franja_mas_caliente(df: pd.DataFrame, ventana_horas=2):
+def franja_mas_caliente(df: pd.DataFrame, ventana_horas: int = 2):
     if df.empty:
         return None
     ds = df.set_index("timestamp").sort_index()
@@ -129,7 +136,14 @@ def resumen_basico(df: pd.DataFrame):
     }
 
 
-def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_horas: int, nombre_cliente: str = ""):
+def generar_pdf(
+    df: pd.DataFrame,
+    fecha_ini,
+    fecha_fin,
+    umbral: float,
+    ventana_horas: int,
+    nombre_cliente: str = "",
+):
     d0 = pd.to_datetime(fecha_ini)
     d1 = pd.to_datetime(fecha_fin)
     df["fecha"] = df["timestamp"].dt.date
@@ -179,11 +193,13 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
             tabla_data.append(["Humedad media (%)", res["hum_media"]])
 
         if franja:
-            tabla_data.append([
-                "Franja más calurosa",
-                f"{franja['inicio'].strftime('%H:%M')} → {franja['fin'].strftime('%H:%M')} "
-                f"({franja['temp_media_franja']} °C)",
-            ])
+            tabla_data.append(
+                [
+                    "Franja más calurosa",
+                    f"{franja['inicio'].strftime('%H:%M')} → {franja['fin'].strftime('%H:%M')} "
+                    f"({franja['temp_media_franja']} °C)",
+                ]
+            )
         else:
             tabla_data.append(["Franja más calurosa", "No disponible"])
 
@@ -191,7 +207,13 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
             mins = sum(int((fin - ini).total_seconds() / 60) for ini, fin in tramos)
 
             if len(dd) > 1:
-                diffs = dd.sort_values("timestamp")["timestamp"].diff().dt.total_seconds().dropna() / 60.0
+                diffs = (
+                    dd.sort_values("timestamp")["timestamp"]
+                    .diff()
+                    .dt.total_seconds()
+                    .dropna()
+                    / 60.0
+                )
                 if not diffs.empty:
                     step = int(round(diffs.median()))
                 else:
@@ -202,26 +224,33 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
             total_mins = len(dd) * step
             pct = round(100 * mins / total_mins, 1) if total_mins else 0.0
 
-            tabla_data.append([
-                f"Tramos ≥ {umbral} °C",
-                ", ".join(f"{ini.strftime('%H:%M')}–{fin.strftime('%H:%M')}" for ini, fin in tramos),
-            ])
+            tabla_data.append(
+                [
+                    f"Tramos ≥ {umbral} °C",
+                    ", ".join(f"{ini.strftime('%H:%M')}–{fin.strftime('%H:%M')}" for ini, fin in tramos),
+                ]
+            )
             tabla_data.append(["% del día ≥ umbral", f"{pct}%"])
         else:
             tabla_data.append([f"Tramos ≥ {umbral} °C", "Ninguno"])
 
         tabla = Table(tabla_data, hAlign="LEFT", colWidths=[60 * mm, 105 * mm])
-        tabla.setStyle(TableStyle([
-            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-            ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
-            ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
-            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ]))
+        tabla.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+                    ("BOX", (0, 0), (-1, -1), 0.5, colors.grey),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ]
+            )
+        )
 
         png_temp = OUT_PNG / f"{f}_temp.png"
         grafica_temp_png(dd, f"{f} – Temperatura", umbral, png_temp)
-        img_temp = Image(str(png_temp)); img_temp._restrictSize(170 * mm, 120 * mm)
+        img_temp = Image(str(png_temp))
+        img_temp._restrictSize(170 * mm, 120 * mm)
 
         story.append(Paragraph(f"Día {f}", styles["Heading2"]))
         story.append(Spacer(1, 4 * mm))
@@ -233,7 +262,8 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
         if dd["hum_pct"].notna().any():
             png_hum = OUT_PNG / f"{f}_hum.png"
             grafica_hum_png(dd, f"{f} – Humedad", png_hum)
-            img_hum = Image(str(png_hum)); img_hum._restrictSize(170 * mm, 120 * mm)
+            img_hum = Image(str(png_hum))
+            img_hum._restrictSize(170 * mm, 120 * mm)
             story.append(Spacer(1, 4 * mm))
             story.append(Paragraph("Gráfico de humedad", styles["Heading3"]))
             story.append(img_hum)
@@ -252,23 +282,45 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
 
 
 # ---------------------------
-# UI – Carga desde ThingSpeak
+# UI – Carga desde ThingSpeak (API oculta)
 # ---------------------------
-st.sidebar.title("ThingSpeak")
+st.sidebar.title("Dispositivo")
 
+# Config YAML (solo campos técnicos, no claves)
 ts_cfg = CFG.get("thingspeak", {})
+field_temp = int(ts_cfg.get("field_temp", 1))
+field_hum = int(ts_cfg.get("field_hum", 2))
+default_results = int(ts_cfg.get("results", 10000)) if ts_cfg.get("results") else 10000
 
-channel_default = str(ts_cfg.get("channel_id", "")) if ts_cfg.get("channel_id") is not None else ""
-api_default = ts_cfg.get("read_api_key") or st.secrets.get("THINGSPEAK_READ_API_KEY", "")
+# Credenciales ocultas desde secrets.toml
+try:
+    READ_API_KEY = st.secrets["THINGSPEAK_READ_API_KEY"]
+    CHANNEL_ID_SECRET = st.secrets["THINGSPEAK_CHANNEL_ID"]
+except Exception:
+    st.error(
+        "No se han encontrado secretos. Crea un archivo `.streamlit/secrets.toml` "
+        "con THINGSPEAK_READ_API_KEY y THINGSPEAK_CHANNEL_ID."
+    )
+    st.stop()
 
+channel_id = str(CHANNEL_ID_SECRET).strip()
 
-channel_id = st.sidebar.text_input("Channel ID", value=channel_default)
-read_api_key = st.sidebar.text_input("Read API Key", value=api_default, type="password")
+if not channel_id or not READ_API_KEY:
+    st.error("THINGSPEAK_READ_API_KEY o THINGSPEAK_CHANNEL_ID están vacíos en secrets.toml.")
+    st.stop()
+
+# Selector visible (no muestra ID ni API)
+opcion = st.sidebar.selectbox(
+    "Selecciona sensor",
+    ["Sensor de mi casa"],
+)
+
+st.sidebar.markdown("### Ajustes de descarga")
 results = st.sidebar.number_input(
     "Número máximo de registros",
     min_value=100,
     max_value=20000,
-    value=int(ts_cfg.get("results", 5000)) if ts_cfg.get("results") else 5000,
+    value=default_results,
     step=100,
 )
 
@@ -276,27 +328,23 @@ if "df" not in st.session_state:
     st.session_state.df = None
 
 if st.sidebar.button("📡 Cargar datos desde ThingSpeak"):
-    if not channel_id or not read_api_key:
-        st.error("Debes indicar Channel ID y Read API Key.")
+    try:
+        df = cargar_desde_thingspeak(
+            channel_id=int(channel_id),
+            read_api_key=READ_API_KEY,
+            field_temp=field_temp,
+            field_hum=field_hum,
+            results=int(results),
+        )
+    except Exception as e:
+        st.error(f"Error consultando ThingSpeak: {e}")
+        df = None
     else:
-        try:
-            df = cargar_desde_thingspeak(
-                channel_id=int(channel_id),
-                read_api_key=read_api_key,
-                field_temp=int(ts_cfg.get("field_temp", 1)),
-                field_hum=int(ts_cfg.get("field_hum", 2)),
-                results=int(results),
-            )
-        except Exception as e:
-            st.error(f"Error consultando ThingSpeak: {e}")
-            df = None
+        if df is None or df.empty:
+            st.warning("ThingSpeak no ha devuelto datos.")
         else:
-            if df is None or df.empty:
-                st.warning("ThingSpeak no ha devuelto datos.")
-            else:
-                st.session_state.df = df
-                st.success(f"Datos cargados: {len(df)} registros.")
-
+            st.session_state.df = df
+            st.success(f"Datos cargados: {len(df)} registros.")
 
 df = st.session_state.df
 
@@ -328,7 +376,9 @@ if df is not None and not df.empty:
     st.subheader(f"🌡️ Temperatura – {dia_preview}")
     fig_temp = px.line(dprev, x="timestamp", y="temp_c", title=f"Temperatura del {dia_preview}")
     fig_temp.add_hline(y=umbral, line_dash="dash", line_color="red", annotation_text=f"Umbral {umbral} °C")
-    fig_temp.update_traces(hovertemplate="<b>%{x|%H:%M}</b><br>Temp: %{y:.1f} °C<extra></extra>")
+    fig_temp.update_traces(
+        hovertemplate="<b>%{x|%H:%M}</b><br>Temp: %{y:.1f} °C<extra></extra>"
+    )
     fig_temp.update_xaxes(tickformat="%H:%M", range=[day_start, day_end], rangeslider_visible=False)
     fig_temp.update_layout(hovermode="x unified")
     st.plotly_chart(fig_temp, use_container_width=True)
@@ -336,7 +386,9 @@ if df is not None and not df.empty:
     if dprev["hum_pct"].notna().any():
         st.subheader(f"💧 Humedad – {dia_preview}")
         fig_hum = px.line(dprev, x="timestamp", y="hum_pct", title=f"Humedad del {dia_preview}")
-        fig_hum.update_traces(hovertemplate="<b>%{x|%H:%M}</b><br>Humedad: %{y:.1f} %<extra></extra>")
+        fig_hum.update_traces(
+            hovertemplate="<b>%{x|%H:%M}</b><br>Humedad: %{y:.1f} %<extra></extra>"
+        )
         fig_hum.update_xaxes(tickformat="%H:%M", range=[day_start, day_end], rangeslider_visible=False)
         fig_hum.update_layout(hovermode="x unified")
         st.plotly_chart(fig_hum, use_container_width=True)
@@ -348,8 +400,14 @@ if df is not None and not df.empty:
         if fecha_fin < fecha_ini:
             st.error("La fecha final no puede ser anterior a la inicial.")
         else:
-            pdf_path = generar_pdf(df, fecha_ini, fecha_fin, umbral, ventana,
-                                   nombre_cliente=CFG.get("nombre_cliente", ""))
+            pdf_path = generar_pdf(
+                df,
+                fecha_ini,
+                fecha_fin,
+                umbral,
+                ventana,
+                nombre_cliente=CFG.get("nombre_cliente", "Mi estación DHT22"),
+            )
             if pdf_path:
                 st.success(f"✅ Informe generado: {pdf_path}")
                 with open(pdf_path, "rb") as f:
@@ -360,4 +418,4 @@ if df is not None and not df.empty:
                         mime="application/pdf",
                     )
 else:
-    st.info("Configura ThingSpeak en la barra lateral y pulsa 'Cargar datos'.")
+    st.info("Pulsa en la barra lateral el botón 'Cargar datos desde ThingSpeak'.")
