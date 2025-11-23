@@ -257,8 +257,10 @@ def generar_pdf(df: pd.DataFrame, fecha_ini, fecha_fin, umbral: float, ventana_h
 st.sidebar.title("ThingSpeak")
 
 ts_cfg = CFG.get("thingspeak", {})
+
 channel_default = str(ts_cfg.get("channel_id", "")) if ts_cfg.get("channel_id") is not None else ""
-api_default = ts_cfg.get("read_api_key", "")
+api_default = ts_cfg.get("read_api_key") or st.secrets.get("THINGSPEAK_READ_API_KEY", "")
+
 
 channel_id = st.sidebar.text_input("Channel ID", value=channel_default)
 read_api_key = st.sidebar.text_input("Read API Key", value=api_default, type="password")
