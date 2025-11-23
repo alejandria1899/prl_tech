@@ -1,0 +1,30 @@
+# Entorno virtual
+mi_entorno/
+venv/
+.venv/
+
+# Salidas y resultados
+outputs/
+*/outputs/
+ui/__pycache__/
+analyzer/__pycache__/
+__pycache__/
+
+# Archivos temporales
+*.pyc
+*.pyo
+*.log
+*.tmp
+*.DS_Store
+
+# Config locales
+config/*.local.yaml
+
+# Archivos de VS Code
+.vscode/
+
+# Archivos de Streamlit locales
+.streamlit/
+
+# Datos personales
+*.csv
