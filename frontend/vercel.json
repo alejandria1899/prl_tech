@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://prl-tech-api.onrender.com/:path*"
+    }
+  ]
+}
