@@ -16,9 +16,13 @@ __pycache__/
 *.log
 *.tmp
 *.DS_Store
+frontend/node_modules/
+frontend/dist/
 
 # Config locales
 config/*.local.yaml
+.env
+.env.local
 
 # Archivos de VS Code
 .vscode/

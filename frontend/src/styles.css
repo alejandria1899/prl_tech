@@ -1,0 +1,388 @@
+:root {
+  color: #17202a;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #eef2f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.topbar {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin: 0 auto 22px;
+  max-width: 1280px;
+}
+
+.topbar h1 {
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 0 0 4px;
+}
+
+.topbar p,
+.panel-header p {
+  color: #607080;
+  margin: 0;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.threshold-control {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d4dde5;
+  border-radius: 6px;
+  display: flex;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 8px 4px 12px;
+}
+
+.threshold-control input {
+  border: 1px solid #c6d0d8;
+  border-radius: 4px;
+  padding: 5px 6px;
+  width: 72px;
+}
+
+button,
+.button-link {
+  align-items: center;
+  background: #174ea6;
+  border: 1px solid #174ea6;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  text-decoration: none;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.alert {
+  background: #fff4e6;
+  border: 1px solid #ffc078;
+  border-radius: 6px;
+  margin: 0 auto 18px;
+  max-width: 1280px;
+  padding: 12px 14px;
+}
+
+.filters-panel {
+  align-items: end;
+  background: #ffffff;
+  border: 1px solid #d9e1e8;
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 190px) minmax(150px, 190px) auto;
+  margin: 0 auto 18px;
+  max-width: 1280px;
+  padding: 14px;
+}
+
+.filter-title {
+  align-items: center;
+  color: #2b3945;
+  display: flex;
+  font-weight: 700;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.filters-panel label {
+  color: #607080;
+  display: grid;
+  font-size: 13px;
+  gap: 5px;
+}
+
+.filters-panel input {
+  border: 1px solid #c6d0d8;
+  border-radius: 6px;
+  color: #17202a;
+  min-height: 40px;
+  padding: 0 10px;
+}
+
+.preset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+button.secondary {
+  background: #ffffff;
+  border-color: #c6d0d8;
+  color: #174ea6;
+  min-width: 72px;
+}
+
+.metric-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 auto 18px;
+  max-width: 1280px;
+}
+
+.metric {
+  background: #ffffff;
+  border: 1px solid #d9e1e8;
+  border-radius: 8px;
+  min-height: 104px;
+  padding: 16px;
+}
+
+.metric-icon {
+  align-items: center;
+  background: #e8f0fe;
+  border-radius: 6px;
+  color: #174ea6;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: 32px;
+}
+
+.metric svg {
+  height: 18px;
+  width: 18px;
+}
+
+.metric span {
+  color: #617080;
+  display: block;
+  font-size: 13px;
+}
+
+.metric strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.2;
+  margin-top: 4px;
+}
+
+.content-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #d9e1e8;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.panel-header {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel-header h2 {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.panel-header.compact {
+  margin-bottom: 10px;
+}
+
+.chart-wrap {
+  height: 430px;
+}
+
+.empty-state {
+  align-items: center;
+  border: 1px dashed #c6d0d8;
+  border-radius: 8px;
+  color: #607080;
+  display: flex;
+  height: 260px;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.readings-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.readings-table th,
+.readings-table td {
+  border-bottom: 1px solid #e6ebef;
+  padding: 10px 8px;
+  text-align: right;
+}
+
+.readings-table th:first-child,
+.readings-table td:first-child {
+  text-align: left;
+}
+
+.readings-table th {
+  color: #607080;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.readings-table tr.over-threshold-row td {
+  background: #fff5f5;
+  color: #a61e1e;
+  font-weight: 700;
+}
+
+.report-preview {
+  margin: 18px auto 0;
+  max-width: 1280px;
+}
+
+.report-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.preview-item {
+  border: 1px solid #e1e7ed;
+  border-radius: 6px;
+  min-height: 74px;
+  padding: 12px;
+}
+
+.preview-item span {
+  color: #607080;
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.preview-item strong {
+  color: #17202a;
+  display: block;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.interval-preview {
+  border-top: 1px solid #e6ebef;
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.interval-preview h3 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+.interval-preview ul {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.interval-preview li {
+  align-items: center;
+  background: #fff5f5;
+  border: 1px solid #ffc9c9;
+  border-radius: 6px;
+  color: #7f1d1d;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.interval-preview p {
+  color: #607080;
+  margin: 0;
+}
+
+@media (max-width: 940px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .metric-grid,
+  .filters-panel,
+  .report-grid,
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preset-actions {
+    justify-content: flex-start;
+  }
+
+  .chart-wrap {
+    height: 360px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  .actions,
+  button,
+  .button-link,
+  .threshold-control,
+  .preset-actions {
+    width: 100%;
+  }
+
+  button,
+  .button-link {
+    justify-content: center;
+  }
+}

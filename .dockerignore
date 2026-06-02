@@ -1,0 +1,13 @@
+.git
+.streamlit
+.env
+mi_entorno
+venv
+.venv
+**/__pycache__
+**/*.pyc
+outputs
+frontend/node_modules
+frontend/dist
+node_modules
+dist

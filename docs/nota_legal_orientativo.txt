@@ -1,2 +1,0 @@
-El presente informe tiene carácter orientativo y se basa en datos obtenidos mediante sensores no calibrados oficialmente.
-No sustituye mediciones reglamentarias realizadas con equipos certificados conforme a normas aplicables (p.ej. ISO 7243, ISO 7726).
