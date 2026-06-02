@@ -2,6 +2,7 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
+from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.responses import FileResponse
@@ -10,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from backend.app.config import get_settings
-from backend.app.database import SessionLocal, get_db
+from backend.app.database import SessionLocal, engine, get_db
 from backend.app.models import Device, MeasurementType, Sensor, SensorReading
 from backend.app.integrations.thingspeak import ThingSpeakConfigError, sync_thingspeak_device
 from backend.app.services.reports import generate_device_report_pdf
@@ -37,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await asyncio.to_thread(_initialize_database)
     task = None
     if settings.thingspeak_sync_enabled:
         task = asyncio.create_task(_thingspeak_sync_loop())
@@ -52,6 +54,18 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title=settings.app_name, lifespan=lifespan)
+
+
+def _initialize_database() -> None:
+    root = Path(__file__).resolve().parents[2]
+    sql_files = [
+        root / "database" / "init" / "001_schema.sql",
+        root / "database" / "migrations" / "002_extensible_sensors.sql",
+    ]
+
+    with engine.begin() as connection:
+        for sql_file in sql_files:
+            connection.exec_driver_sql(sql_file.read_text(encoding="utf-8"))
 
 
 @app.get("/health")
